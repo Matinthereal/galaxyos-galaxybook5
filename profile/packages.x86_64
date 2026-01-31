@@ -1,0 +1,120 @@
+# Samsung Galaxy Book Specific
+samsung-galaxybook-dkms
+iio-sensor-proxy
+libwacom
+xf86-input-wacom
+
+# Base System
+base
+base-devel
+linux
+linux-headers
+linux-firmware
+intel-ucode
+
+# Boot
+grub
+efibootmgr
+systemd-boot
+syslinux
+
+# Audio (4-speaker support)
+alsa-utils
+alsa-plugins
+alsa-sof-firmware
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+wireplumber
+pavucontrol
+
+# Power Management
+tlp
+tlp-rdw
+powertop
+thermald
+cpupower
+
+# Graphics & Gaming
+mesa
+lib32-mesa
+vulkan-intel
+vulkan-icd-loader
+lib32-vulkan-intel
+intel-media-driver
+libva-intel-driver
+gamemode
+lib32-gamemode
+mangohud
+lib32-mangohud
+steam
+wine-staging
+winetricks
+
+# Touch/Tablet
+touchegg
+onboard
+celluloid
+
+# Desktop Environment (GNOME for best touch support)
+gnome
+gnome-extra
+gdm
+gnome-tweaks
+gnome-shell-extension-appindicator
+nautilus
+gedit
+gnome-terminal
+epiphany
+evince
+
+# Installer (Calamares)
+calamares
+calamares-config
+os-prober
+partitionmanager
+
+# Network
+networkmanager
+network-manager-applet
+wireless_tools
+wpa_supplicant
+iw
+iwd
+bluez
+bluez-utils
+pulseaudio-bluetooth
+
+# Filesystems
+btrfs-progs
+dosfstools
+e2fsprogs
+exfatprogs
+f2fs-tools
+ntfs-3g
+cryptsetup
+lvm2
+
+# Utilities
+git
+vim
+nano
+htop
+btop
+neofetch
+inxi
+usbutils
+pciutils
+intel-gpu-tools
+vulkan-tools
+mesa-demos
+firefox
+thunderbird
+libreoffice-fresh
+vlc
+gimp
+
+# Development
+code
+docker
