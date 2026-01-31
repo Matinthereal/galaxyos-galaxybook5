@@ -1,0 +1,8 @@
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="GalaxyOS"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash i915.enable_psr=0 intel_pstate=passive pcie_aspm=force acpi_backlight=vendor samsung-galaxybook.enable_platform_profile=1 mem_sleep_default=deep"
+GRUB_CMDLINE_LINUX=""
+
+# Preload Samsung modules
+GRUB_PRELOAD_MODULES="part_gpt part_msdos"
