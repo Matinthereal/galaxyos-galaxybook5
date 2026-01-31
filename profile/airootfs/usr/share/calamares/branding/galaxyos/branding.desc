@@ -1,0 +1,27 @@
+---
+componentName:  galaxyos
+
+welcomeStyleCalamares:   true
+
+strings:
+    productName:         GalaxyOS
+    shortProductName:    GalaxyOS
+    version:             2025.02
+    shortVersion:        2025.02
+    bootloaderEntryName: GalaxyOS
+    productUrl:          https://github.com/yourusername/galaxyos
+    supportUrl:          https://github.com/yourusername/galaxyos/issues
+    releaseNotesUrl:     https://github.com/yourusername/galaxyos/releases
+
+images:
+    productLogo:         "galaxyos-logo.png"
+    productIcon:         "galaxyos-icon.png"
+    productWelcome:      "welcome.png"
+
+slideshow:               "show.qml"
+
+style:
+   SidebarBackground:    "#2c3e50"
+   SidebarText:          "#ecf0f1"
+   SidebarTextSelect:    "#3498db"
+   SidebarTextHighlight: "#2980b9"
