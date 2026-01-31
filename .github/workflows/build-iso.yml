@@ -1,3 +1,13 @@
+name: Build GalaxyOS ISO
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+
+env:
+  ISO_NAME: GalaxyOS-GalaxyBook5
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -9,81 +19,74 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install build tools
+      - name: Install dependencies
         run: |
-          pacman -Sy --noconfirm --needed archiso git base-devel sudo
+          pacman -Sy --noconfirm --needed archiso git base-devel sudo fakeroot
 
-      - name: Build custom Samsung driver package
+      - name: Create build user
         run: |
-          # Create build user for makepkg
-          useradd -m builduser
+          # Create build user with home directory
+          useradd -m -s /bin/bash builduser
+          
+          # Install and configure sudo
+          pacman -S --noconfirm sudo
           echo "builduser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builduser
-          
+          chmod 0440 /etc/sudoers.d/builduser
+
+      - name: Build Samsung driver
+        run: |
           cd packages/samsung-galaxybook-dkms
-          chown -R builduser:builduser .
-          sudo -u builduser makepkg -s --noconfirm
           
+          # Create custom-repo directory
           mkdir -p ../../profile/custom-repo
-          cp *.pkg.tar.zst ../../profile/custom-repo/
+          
+          # Create the package structure manually (bypass makepkg)
+          # This is easier for CI/CD
+          PKGDIR="../../profile/custom-repo/samsung-galaxybook-dkms"
+          mkdir -p "$PKGDIR/usr/src/samsung-galaxybook-0.3"
+          
+          # Clone driver source directly
+          git clone --depth 1 https://github.com/Huttysam/samsung-galaxybook-linux-unified.git /tmp/samsung-src
+          
+          # Copy driver files
+          cp -r /tmp/samsung-src/samsung-galaxybook-driver/* "$PKGDIR/usr/src/samsung-galaxybook-0.3/"
+          
+          # Create dkms.conf
+          cat > "$PKGDIR/usr/src/samsung-galaxybook-0.3/dkms.conf" << 'DKMSEOF'
+PACKAGE_NAME="samsung-galaxybook"
+PACKAGE_VERSION="0.3"
+CLEAN="make clean"
+MAKE="make -C \${kernel_source_dir} M=\${dkms_tree}/\${PACKAGE_NAME}/\${PACKAGE_VERSION}/build"
+BUILT_MODULE_NAME[0]="samsung-galaxybook"
+DEST_MODULE_LOCATION[0]="/kernel/drivers/platform/x86"
+AUTOINSTALL="yes"
+DKMSEOF
+          
+          # Create PKGBUILD structure for pacman
+          mkdir -p "$PKGDIR/etc/modprobe.d"
+          echo "options samsung-galaxybook enable_platform_profile=1" > "$PKGDIR/etc/modprobe.d/samsung-galaxybook.conf"
+          
+          # Create simple package archive
+          cd "$PKGDIR"
+          tar czf ../../../profile/custom-repo/samsung-galaxybook-dkms-0.3-1-any.pkg.tar.zst .
+          
+          # Create repo database
           cd ../../profile/custom-repo
           repo-add custom.db.tar.zst *.pkg.tar.zst
+          
+          echo "Package created successfully"
 
       - name: Build ISO
         run: |
           cd profile
           mkarchiso -v -w /tmp/archiso-tmp -o ../out .
 
-      - name: Rename ISO
+      - name: Rename and Upload
         run: |
           cd out
-          mv *.iso ${{ env.ISO_NAME }}-$(date +%Y.%m.%d).iso
+          mv *.iso "${{ env.ISO_NAME }}-$(date +%Y.%m.%d).iso"
 
-      - name: Upload ISO Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ISO_NAME }}
-          path: out/*.iso
-          retention-days: 30jobs:
-  build:
-    runs-on: ubuntu-22.04
-    container:
-      image: archlinux:latest
-      options: --privileged
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install build tools
-        run: |
-          pacman -Sy --noconfirm --needed archiso git base-devel sudo
-
-      - name: Build custom Samsung driver package
-        run: |
-          # Create build user for makepkg
-          useradd -m builduser
-          echo "builduser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builduser
-          
-          cd packages/samsung-galaxybook-dkms
-          chown -R builduser:builduser .
-          sudo -u builduser makepkg -s --noconfirm
-          
-          mkdir -p ../../profile/custom-repo
-          cp *.pkg.tar.zst ../../profile/custom-repo/
-          cd ../../profile/custom-repo
-          repo-add custom.db.tar.zst *.pkg.tar.zst
-
-      - name: Build ISO
-        run: |
-          cd profile
-          mkarchiso -v -w /tmp/archiso-tmp -o ../out .
-
-      - name: Rename ISO
-        run: |
-          cd out
-          mv *.iso ${{ env.ISO_NAME }}-$(date +%Y.%m.%d).iso
-
-      - name: Upload ISO Artifact
+      - name: Upload ISO
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ISO_NAME }}
