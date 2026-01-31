@@ -1,0 +1,16 @@
+[Unit]
+Description=GalaxyOS First Boot Setup
+After=network.target
+Before=display-manager.service
+ConditionFirstBoot=yes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/galaxyos-firstboot
+ExecStartPost=/bin/systemctl disable galaxyos-firstboot.service
+RemainAfterExit=yes
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target
