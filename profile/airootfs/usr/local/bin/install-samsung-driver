@@ -1,0 +1,8 @@
+#!/bin/bash
+cd /opt/drivers/samsung-galaxybook/samsung-galaxybook-driver
+make clean 2>/dev/null || true
+make
+make install
+depmod -a
+modprobe samsung-galaxybook || true
+echo "Samsung Galaxy Book driver installed"
