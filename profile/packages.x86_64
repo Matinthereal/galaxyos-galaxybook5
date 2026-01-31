@@ -3,7 +3,7 @@ iio-sensor-proxy
 libwacom
 xf86-input-wacom
 
-# Driver Build Tools (needed for Samsung driver)
+# Driver Build Tools
 git
 make
 gcc
@@ -18,16 +18,16 @@ linux-firmware
 intel-ucode
 arch-install-scripts
 
-# Boot
+# Boot (REMOVED systemd-boot - it's in systemd package)
 grub
 efibootmgr
-systemd-boot
 syslinux
 
-# Audio (4-speaker support)
+# Audio
 alsa-utils
 alsa-plugins
-alsa-sof-firmware
+alsa-firmware
+sof-firmware
 pipewire
 pipewire-alsa
 pipewire-pulse
@@ -42,26 +42,20 @@ powertop
 thermald
 cpupower
 
-# Graphics & Gaming
+# Graphics (REMOVED lib32-* packages, REQUIRES Multilib)
 mesa
-lib32-mesa
 vulkan-intel
 vulkan-icd-loader
-lib32-vulkan-intel
 intel-media-driver
 libva-intel-driver
+
+# Gaming (No 32-bit libs until you install them later)
 gamemode
-lib32-gamemode
 mangohud
-lib32-mangohud
-steam
-wine-staging
-winetricks
 
 # Touch/Tablet
 touchegg
 onboard
-celluloid
 
 # Desktop Environment (GNOME)
 gnome
@@ -72,24 +66,6 @@ gnome-shell-extension-appindicator
 nautilus
 gedit
 gnome-terminal
-epiphany
-evince
-
-# Installer (Calamares)
-calamares
-os-prober
-partitionmanager
-
-# Network
-networkmanager
-network-manager-applet
-wireless_tools
-wpa_supplicant
-iw
-iwd
-bluez
-bluez-utils
-pulseaudio-bluetooth
 
 # Filesystems
 btrfs-progs
@@ -101,12 +77,22 @@ ntfs-3g
 cryptsetup
 lvm2
 
-# Utilities
+# Network
+networkmanager
+network-manager-applet
+wireless-tools
+wpa_supplicant
+iw
+iwd
+bluez
+bluez-utils
+pulseaudio-bluetooth
+
+# Utilities (REMOVED neofetch - use fastfetch or install later)
 vim
 nano
 htop
 btop
-neofetch
 inxi
 usbutils
 pciutils
@@ -114,7 +100,6 @@ intel-gpu-tools
 vulkan-tools
 mesa-demos
 firefox
-thunderbird
 libreoffice-fresh
 vlc
 gimp
