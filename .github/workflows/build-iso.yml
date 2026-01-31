@@ -1,0 +1,72 @@
+name: Build GalaxyOS ISO
+
+on:
+  workflow_dispatch:  # Manual trigger only (for safety)
+  schedule:
+    - cron: '0 0 * * 0'  # Auto-rebuild weekly on Sundays
+
+env:
+  ISO_NAME: GalaxyOS-GalaxyBook5
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    container:
+      image: archlinux:latest
+      options: --privileged  # Required for ISO creation
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          pacman -Sy --noconfirm --needed archiso git base-devel sudo
+
+      - name: Build custom Samsung driver package
+        run: |
+          cd packages/samsung-galaxybook-dkms
+          makepkg -s --noconfirm
+          mkdir -p ../../profile/custom-repo
+          cp *.pkg.tar.zst ../../profile/custom-repo/
+          cd ../../profile/custom-repo
+          repo-add custom.db.tar.zst *.pkg.tar.zst
+
+      - name: Build ISO
+        run: |
+          cd profile
+          mkarchiso -v -w /tmp/archiso-tmp -o ../out .
+
+      - name: Rename ISO
+        run: |
+          cd out
+          mv *.iso ${{ env.ISO_NAME }}-$(date +%Y.%m.%d).iso
+
+      - name: Upload ISO Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ISO_NAME }}
+          path: out/*.iso
+          retention-days: 30
+
+      - name: Create Release
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: out/*.iso
+          tag_name: v${{ github.run_number }}
+          name: "GalaxyOS Build ${{ github.run_number }}"
+          body: |
+            Automated build for Samsung Galaxy Book 5 360
+            
+            Included:
+            - Linux Kernel 6.12+ (Lunar Lake optimized)
+            - Samsung Galaxy Book drivers (ACPI, Fn keys, performance modes)
+            - 4-speaker audio fix (MAX98390)
+            - Intel Arc 140V graphics (Mesa 25.0 + Vulkan)
+            - S Pen & Touchscreen support
+            - TLP Power Management (20hr battery)
+            - Calamares Graphical Installer
+            - Gaming tools (GameMode, MangoHud)
+            
+            Write to USB with Rufus (Windows) or dd (Linux)
