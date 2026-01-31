@@ -1,0 +1,10 @@
+#!/bin/bash
+# Welcome script for LiveCD
+yad --title="GalaxyOS - Samsung Galaxy Book 5 360" \
+    --width=600 \
+    --height=400 \
+    --center \
+    --text="<big><b>Welcome to GalaxyOS!</b></big>\n\nThis Linux distribution is specifically optimized for the Samsung Galaxy Book 5 360.\n\n<b>Pre-configured features:</b>\n• Samsung ACPI drivers (Fn keys, performance modes)\n• 4-speaker audio support (MAX98390)\n• Intel Arc 140V graphics (Gaming ready)\n• S Pen & Touchscreen support\n• 20-hour battery life optimization\n• Auto-rotation & Tablet mode\n\n<b>Install:</b> Click 'Install GalaxyOS' on the desktop\n<b>Try:</b> Browse around, everything should work out-of-the-box!" \
+    --button="Install GalaxyOS:calamares" \
+    --button="Terminal:gnome-terminal" \
+    --button="Close:0"
