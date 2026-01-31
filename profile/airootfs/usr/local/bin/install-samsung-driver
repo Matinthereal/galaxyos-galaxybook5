@@ -6,3 +6,4 @@ make install
 depmod -a
 modprobe samsung-galaxybook || true
 echo "Samsung Galaxy Book driver installed"
+
