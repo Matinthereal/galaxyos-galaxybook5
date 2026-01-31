@@ -21,17 +21,34 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pacman -Sy --noconfirm --needed archiso git base-devel linux-headers
+          pacman -Sy --noconfirm --needed archiso git base-devel linux-headers \
+            syslinux dosfstools e2fsprogs squashfs-tools grub
 
       - name: Prepare Samsung driver
         run: |
           mkdir -p profile/airootfs/opt/drivers
           git clone --depth 1 https://github.com/Huttysam/samsung-galaxybook-linux-unified.git profile/airootfs/opt/drivers/samsung-galaxybook
 
-      - name: Build ISO
+      - name: Build ISO (using releng base)
         run: |
-          cd profile
-          mkarchiso -v -w /tmp/archiso-tmp -o ../out .
+          # Use Archiso's default profile (has all boot files)
+          cp -r /usr/share/archiso/configs/releng /tmp/galaxyos-build
+          
+          # REPLACE packages with your custom list
+          cp profile/packages.x86_64 /tmp/galaxyos-build/packages.x86_64
+          
+          # REPLACE pacman.conf with your custom repo
+          cp profile/pacman.conf /tmp/galaxyos-build/pacman.conf
+          
+          # REPLACE profiledef.sh with your settings
+          cp profile/profiledef.sh /tmp/galaxyos-build/profiledef.sh
+          
+          # MERGE your custom files into airootfs
+          cp -r profile/airootfs/* /tmp/galaxyos-build/airootfs/
+          
+          # Build the ISO
+          cd /tmp/galaxyos-build
+          mkarchiso -v -w /tmp/archiso-tmp -o $GITHUB_WORKSPACE/out .
 
       - name: Rename ISO
         run: |
