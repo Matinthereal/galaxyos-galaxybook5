@@ -1,16 +1,22 @@
-# Samsung Galaxy Book Specific
-samsung-galaxybook-dkms
+# Samsung Galaxy Book Hardware Support
 iio-sensor-proxy
 libwacom
 xf86-input-wacom
+
+# Driver Build Tools (needed for Samsung driver)
+git
+make
+gcc
+dkms
+linux-headers
 
 # Base System
 base
 base-devel
 linux
-linux-headers
 linux-firmware
 intel-ucode
+arch-install-scripts
 
 # Boot
 grub
@@ -57,7 +63,7 @@ touchegg
 onboard
 celluloid
 
-# Desktop Environment (GNOME for best touch support)
+# Desktop Environment (GNOME)
 gnome
 gnome-extra
 gdm
@@ -71,7 +77,6 @@ evince
 
 # Installer (Calamares)
 calamares
-calamares-config
 os-prober
 partitionmanager
 
@@ -97,7 +102,6 @@ cryptsetup
 lvm2
 
 # Utilities
-git
 vim
 nano
 htop
