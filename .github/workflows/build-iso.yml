@@ -30,19 +30,22 @@ jobs:
 
       - name: Build ISO
         run: |
-          # Use Archiso's RELENG profile
+          # Use Archiso's RELENG profile (has working pacman.conf, boot files, etc.)
           cp -r /usr/share/archiso/configs/releng /tmp/galaxyos-build
           
-          # Replace packages
+          # Replace packages with your Galaxy Book list
           cp profile/packages.x86_64 /tmp/galaxyos-build/packages.x86_64
           
-          # Merge custom files
+          # Merge your custom files (scripts, configs, calamares)
           cp -r profile/airootfs/* /tmp/galaxyos-build/airootfs/
           
-          # Copy profile metadata
-          cp profile/profiledef.sh /tmp/galaxyos-build/profiledef.sh
+          # Update ISO metadata (keep releng's working config, just change names)
+          sed -i 's/iso_name="arch"/iso_name="galaxyos"/' /tmp/galaxyos-build/profiledef.sh
+          sed -i 's/iso_label="ARCH_\\$(date +%Y%m)"/iso_label="GALAXYOS_\\$(date +%Y%m)"/' /tmp/galaxyos-build/profiledef.sh
+          sed -i 's/iso_publisher="Arch Linux <https:\/\/archlinux.org>"/iso_publisher="GalaxyOS Team"/' /tmp/galaxyos-build/profiledef.sh
+          sed -i 's/iso_application="Arch Linux Live\/Rescue CD"/iso_application="GalaxyOS for Galaxy Book 5 360"/' /tmp/galaxyos-build/profiledef.sh
           
-          # Initialize pacman keys
+          # Initialize pacman keyring (fixes signature errors)
           pacman-key --init
           pacman-key --populate archlinux
           
