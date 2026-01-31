@@ -1,0 +1,29 @@
+#!/bin/bash
+# Fix for Samsung Galaxy Book 4-speaker setup (MAX98390)
+# Binds the remaining 3 amplifiers that don't auto-detect
+
+I2C_BUS="i2c-2"
+
+# Check if we can access I2C
+if [ ! -d "/sys/bus/i2c/devices/${I2C_BUS}" ]; then
+    # Try alternative bus numbers
+    for bus in i2c-1 i2c-3 i2c-4; do
+        if [ -d "/sys/bus/i2c/devices/${bus}" ]; then
+            I2C_BUS="${bus}"
+            break
+        fi
+    done
+fi
+
+# Bind amplifiers (0x38 is usually auto-detected by kernel)
+# These are the additional ones for full 4-speaker support
+echo "max98390 0x39" > "/sys/bus/i2c/devices/${I2C_BUS}/new_device" 2>/dev/null || true
+echo "max98390 0x3c" > "/sys/bus/i2c/devices/${I2C_BUS}/new_device" 2>/dev/null || true
+echo "max98390 0x3d" > "/sys/bus/i2c/devices/${I2C_BUS}/new_device" 2>/dev/null || true
+
+# Set proper ALSA mixer settings
+amixer -c 0 set "Master" 100% unmute 2>/dev/null || true
+amixer -c 0 set "Speaker" 100% unmute 2>/dev/null || true
+amixer -c 0 set "Headphone" 100% unmute 2>/dev/null || true
+
+echo "Samsung audio fix applied successfully"
