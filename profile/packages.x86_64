@@ -18,7 +18,7 @@ linux-firmware
 intel-ucode
 arch-install-scripts
 
-# Boot (REMOVED systemd-boot - it's in systemd package)
+# Boot
 grub
 efibootmgr
 syslinux
@@ -42,16 +42,15 @@ powertop
 thermald
 cpupower
 
-# Graphics (REMOVED lib32-* packages, REQUIRES Multilib)
+# Graphics
 mesa
 vulkan-intel
 vulkan-icd-loader
 intel-media-driver
 libva-intel-driver
 
-# Gaming (No 32-bit libs until you install them later)
+# Gaming (Install Steam/Wine after install via AUR)
 gamemode
-mangohud
 
 # Touch/Tablet
 touchegg
@@ -80,7 +79,7 @@ lvm2
 # Network
 networkmanager
 network-manager-applet
-wireless-tools
+wireless_tools
 wpa_supplicant
 iw
 iwd
@@ -88,7 +87,7 @@ bluez
 bluez-utils
 pulseaudio-bluetooth
 
-# Utilities (REMOVED neofetch - use fastfetch or install later)
+# Utilities
 vim
 nano
 htop
