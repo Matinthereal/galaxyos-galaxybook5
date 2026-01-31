@@ -23,7 +23,7 @@ grub
 efibootmgr
 syslinux
 
-# Audio
+# Audio (PIPEWIRE ONLY - no pulseaudio)
 alsa-utils
 alsa-plugins
 alsa-firmware
@@ -34,6 +34,7 @@ pipewire-pulse
 pipewire-jack
 wireplumber
 pavucontrol
+# REMOVED: pulseaudio-bluetooth (conflicts with pipewire)
 
 # Power Management
 tlp
@@ -49,7 +50,7 @@ vulkan-icd-loader
 intel-media-driver
 libva-intel-driver
 
-# Gaming (Install Steam/Wine after install via AUR)
+# Gaming
 gamemode
 
 # Touch/Tablet
@@ -76,7 +77,7 @@ ntfs-3g
 cryptsetup
 lvm2
 
-# Network
+# Network (REMOVED pulseaudio-bluetooth)
 networkmanager
 network-manager-applet
 wireless_tools
@@ -85,7 +86,6 @@ iw
 iwd
 bluez
 bluez-utils
-pulseaudio-bluetooth
 
 # Utilities
 vim
